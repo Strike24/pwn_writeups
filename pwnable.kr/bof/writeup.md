@@ -18,6 +18,10 @@
 ## Analysis
 The challenge binary uses the vulnerable `gets()` function to read input into a 32-byte buffer (`overflowme`). Since `gets()` does not perform bounds checking, we can overflow this buffer to reach and overwrite the `key` parameter stored further down the stack.
 
+<br/>
+![My poor drawing of a stack](https://i.imgur.com/jJD00uI.png)
+
+
 ### Disassembly (IDA)
 In `func`, we identify the stack offsets for the buffer and the argument:
 - **Buffer (`overflowme`)**: Loaded into `eax` via `lea eax, [ebp-2c]`.
@@ -39,6 +43,8 @@ Therefore, we need 52 bytes of padding (32 bytes taken by the buffer, 20 bytes f
 
 The binary has a stack canary, but since we are overwriting an argument located above the return address and the canary we don't trigger it.
 
+After getting root access, we just run `cat flag` to succesfuly get the flag.
+
 ### Payload
 Python to generate the payload. little-endian, `0xcafebabe` becomes `\xbe\xba\xfe\xca`.
 
@@ -46,4 +52,5 @@ Python to generate the payload. little-endian, `0xcafebabe` becomes `\xbe\xba\xf
 (python3 -c "import sys; sys.stdout.buffer.write(b'A'*52 + b'\xbe\xba\xfe\xca')"; cat) | nc pwnable.kr 9000
 ```
 
-*Note: The binary has a stack canary (`gs:14h`), but since we are overwriting an argument located **above** the saved return address and canary on the stack, we don't trigger the stack smashing protector before the check occurs.*
+## Flag
+`Daddy_I_just_pwned_a_buff3r!`
