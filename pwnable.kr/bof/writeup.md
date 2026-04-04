@@ -18,9 +18,9 @@
 ## Analysis
 The challenge binary uses the vulnerable `gets()` function to read input into a 32-byte buffer (`overflowme`). Since `gets()` does not perform bounds checking, we can overflow this buffer to reach and overwrite the `key` parameter stored further down the stack.
 
+<img width="400" height="400" alt="My poor drawing of a stack" src="https://github.com/user-attachments/assets/e58cef2e-2bdf-4df9-bdf8-39749610cdb9" />
 <br/>
-![My poor drawing of a stack](https://i.imgur.com/jJD00uI.png)
-
+(my poor drawing of a stack)
 
 ### Disassembly (IDA)
 In `func`, we identify the stack offsets for the buffer and the argument:
